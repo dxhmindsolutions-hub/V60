@@ -10,14 +10,36 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system;background:#f2f2f7}
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  background:#f2f2f7
+}
 
 /* ===== HEADER ===== */
-header{background:#fff;padding:12px;border-bottom:1px solid #ddd}
-.top{display:flex;align-items:center;gap:10px}
-.menu{font-size:22px;cursor:pointer}
-.addMain{margin-left:auto;font-size:22px;cursor:pointer}
-h1{margin:0;font-size:20px}
+header{
+  background:#fff;
+  padding:12px;
+  border-bottom:1px solid #ddd
+}
+.top{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+.menu{
+  font-size:22px;
+  cursor:pointer
+}
+.addMain{
+  margin-left:auto;
+  font-size:20px;
+  cursor:pointer
+}
+h1{
+  margin:0;
+  font-size:20px
+}
 .search input{
   width:100%;
   padding:10px;
@@ -54,7 +76,10 @@ h1{margin:0;font-size:20px}
 }
 
 /* ===== LISTA ===== */
-main{padding:12px;padding-bottom:260px}
+main{
+  padding:12px;
+  padding-bottom:260px
+}
 .item{
   background:#fff;
   border-radius:12px;
@@ -64,18 +89,13 @@ main{padding:12px;padding-bottom:260px}
   align-items:center;
   margin-bottom:8px
 }
-.item button{
-  border:none;
-  border-radius:8px;
-  padding:6px 10px
-}
-/* CONTENEDOR DE BOTONES EN LA LISTA ARTICULOS */
+
+/* CONTENEDOR BOTONES */
 .item > div{
   display:flex;
-  gap:8px;
 }
 
-/* BOTONES IGUALES */
+/* BOTONES LISTA */
 .item button{
   width:36px;
   height:36px;
@@ -91,21 +111,20 @@ main{padding:12px;padding-bottom:260px}
 /* AÑADIR */
 .add{
   background:#000;
-  color:#fff;
+  color:#fff
 }
 
 /* ELIMINAR */
 .del{
   background:#ff3b30;
-  color:#fff;
+  color:#fff
 }
 
-/* EFECTO PULSADO */
+/* EFECTO */
 .item button:active{
   transform:scale(0.9);
-  opacity:0.85;
+  opacity:.85
 }
-
 
 /* ===== TICKET ===== */
 #ticket-panel{
@@ -117,7 +136,11 @@ main{padding:12px;padding-bottom:260px}
   border-radius:14px;
   padding:12px
 }
-#ticket-panel ul{list-style:none;padding:0;margin:0}
+#ticket-panel ul{
+  list-style:none;
+  padding:0;
+  margin:0
+}
 #ticket-panel li{
   display:flex;
   justify-content:space-between;
@@ -191,20 +214,20 @@ main{padding:12px;padding-bottom:260px}
   font-weight:600
 }
 
-/* ===== ACTIVO ===== */
+/* ACTIVO */
 .btns button.active{
   background:#000;
   color:#fff
 }
 
-/* ===== BOTONES MODAL (ORDEN) ===== */
+/* ===== BOTONES MODAL ===== */
 .modal .box > div:last-child{
   display:flex;
   gap:8px;
-  margin-top:16px;
+  margin-top:16px
 }
 
-/* ===== ACEPTAR / AÑADIR / GUARDAR ===== */
+/* VERDE */
 .modal #add,
 .modal #save,
 .modal #send{
@@ -217,7 +240,7 @@ main{padding:12px;padding-bottom:260px}
   font-weight:600
 }
 
-/* ===== CANCELAR ===== */
+/* ROJO */
 .modal #cancel{
   flex:1;
   padding:12px;
@@ -228,16 +251,9 @@ main{padding:12px;padding-bottom:260px}
   font-weight:600
 }
 
-/* ===== WHATSAPP (MISMO TAMAÑO) ===== */
-.modal textarea + div{
-  display:flex;
-  gap:8px;
-  margin-top:16px;
-}
-
-/* ===== EFECTO PULSADO ===== */
+/* EFECTO */
 .modal button:active{
-  transform:scale(0.97);
+  transform:scale(0.97)
 }
 
 /* ===== TICKET IMPRESIÓN ===== */
@@ -279,6 +295,7 @@ main{padding:12px;padding-bottom:260px}
   <div class="top">
     <div class="menu" onclick="toggleDrawer()">≡</div>
     <h1>Despensa</h1>
+    <!-- BOTÓN MODO EDICIÓN -->
     <div class="addMain" onclick="toggleEditMode()">✏️</div>
   </div>
   <div class="search">
@@ -307,8 +324,6 @@ main{padding:12px;padding-bottom:260px}
     </div>
   </div>
 </div>
-
-
 
 <div id="print-ticket">
   <h2>[PEDIDO]</h2>
