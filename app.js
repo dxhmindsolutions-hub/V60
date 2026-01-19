@@ -1,5 +1,12 @@
+/* ===== MODO EDICIÓN ===== */
 let editMode = false;
 
+function toggleEditMode(){
+  editMode = !editMode;
+  render();
+}
+
+/* ===== CATEGORÍAS ===== */
 const categories=[
   "Aguas y refrescos",
   "Cerveza, vinos y licores",
@@ -14,33 +21,32 @@ const categories=[
   "Otros"
 ];
 
-let activeCat=categories[0];
-let items=JSON.parse(localStorage.items||'[]');
-let cart=JSON.parse(localStorage.cart||'[]');
-let deleteIndex=null, deleteType=null;
+let activeCat = categories[0];
+let items = JSON.parse(localStorage.items || '[]');
+let cart  = JSON.parse(localStorage.cart  || '[]');
+let deleteIndex = null, deleteType = null;
 
-/* ===== MODO EDICIÓN ===== */
-function toggleEditMode(){
-  editMode=!editMode;
-  document.body.classList.toggle('edit-mode',editMode);
-  render();
+/* ===== DRAWER ===== */
+function toggleDrawer(){
+  drawer.classList.toggle('open');
 }
 
-function toggleDrawer(){drawer.classList.toggle('open')}
-
 function renderDrawer(){
-  drawer.innerHTML=categories.map(c=>`
+  drawer.innerHTML = categories.map(c=>`
     <button class="${c===activeCat?'active':''}"
-      onclick="activeCat='${c}';toggleDrawer();render()">${c}</button>
+      onclick="activeCat='${c}';toggleDrawer();render()">
+      ${c}
+    </button>
   `).join('');
 }
 
+/* ===== RENDER PRINCIPAL ===== */
 function render(){
   renderDrawer();
-  const q=search.value.toLowerCase();
+  const q = search.value.toLowerCase();
 
-  list.innerHTML=items
-    .filter(i=>(!q||i.name.toLowerCase().includes(q)) && i.cat===activeCat)
+  list.innerHTML = items
+    .filter(i => (!q || i.name.toLowerCase().includes(q)) && i.cat === activeCat)
     .map((i,idx)=>`
       <div class="item">
         <span>${i.name}</span>
@@ -55,33 +61,32 @@ function render(){
     `).join('');
 
   renderTicket();
-  localStorage.items=JSON.stringify(items);
-  localStorage.cart=JSON.stringify(cart);
+  localStorage.items = JSON.stringify(items);
+  localStorage.cart  = JSON.stringify(cart);
 }
 
+/* ===== NUEVO ARTÍCULO ===== */
 function showAddItem(){
-  const m=document.createElement('div');
-  m.className='modal'; m.style.display='flex';
-  m.innerHTML=`<div class="box">
-    <div style="display:flex;justify-content:space-between;align-items:center">
+  const m = document.createElement('div');
+  m.className='modal'; 
+  m.style.display='flex';
+  m.innerHTML=`
+    <div class="box">
       <h3>Nuevo artículo</h3>
-      <button id="close" style="border:none;background:none;font-size:20px">✕</button>
-    </div>
-    <input id="iname" placeholder="Nombre" style="width:100%;padding:8px">
-    <select id="icat" style="width:100%;padding:8px;margin-top:8px">
-      ${categories.map(c=>`<option>${c}</option>`).join('')}
-    </select>
-    <div style="display:flex;gap:8px;margin-top:10px">
-      <button id="cancel">Cancelar</button>
-      <button id="save">Guardar</button>
-    </div>
-  </div>`;
+      <input id="iname" placeholder="Nombre">
+      <select id="icat">
+        ${categories.map(c=>`<option>${c}</option>`).join('')}
+      </select>
+      <div>
+        <button id="save">Guardar</button>
+        <button id="cancel">Cancelar</button>
+      </div>
+    </div>`;
   document.body.appendChild(m);
 
-  m.querySelector('#cancel').onclick=()=>m.remove();
-  m.querySelector('#close').onclick=()=>m.remove();
-  m.querySelector('#save').onclick=()=>{
-    const n=iname.value.trim();
+  m.querySelector('#cancel').onclick = ()=>m.remove();
+  m.querySelector('#save').onclick = ()=>{
+    const n = iname.value.trim();
     if(n){
       items.push({name:n,cat:icat.value});
       m.remove(); render();
@@ -89,30 +94,33 @@ function showAddItem(){
   };
 }
 
+/* ===== CANTIDAD ===== */
 function showQtyModal(name){
   let qty=1, unit='UNIDAD';
   const m=document.createElement('div');
-  m.className='modal'; m.style.display='flex';
-  m.innerHTML=`<div class="box">
-    <h3>${name}</h3>
+  m.className='modal'; 
+  m.style.display='flex';
+  m.innerHTML=`
+    <div class="box">
+      <h3>${name}</h3>
 
-    <p>Cantidad</p>
-    <div class="btns qty">
-      ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button>${n}</button>`).join('')}
-    </div>
+      <p>Cantidad</p>
+      <div class="btns qty">
+        ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button>${n}</button>`).join('')}
+      </div>
 
-    <p>Unidad</p>
-    <div class="btns unit">
-      <button class="active">UNIDAD</button>
-      <button>KG</button>
-      <button>CAJA</button>
-    </div>
+      <p>Unidad</p>
+      <div class="btns unit">
+        <button class="active">UNIDAD</button>
+        <button>KG</button>
+        <button>CAJA</button>
+      </div>
 
-    <div>
-      <button id="add">Añadir</button>
-      <button id="cancel">Cancelar</button>
-    </div>
-  </div>`;
+      <div>
+        <button id="add">Añadir</button>
+        <button id="cancel">Cancelar</button>
+      </div>
+    </div>`;
   document.body.appendChild(m);
 
   m.querySelectorAll('.qty button').forEach(b=>b.onclick=()=>{
@@ -128,18 +136,21 @@ function showQtyModal(name){
   m.querySelector('#cancel').onclick=()=>m.remove();
   m.querySelector('#add').onclick=()=>{
     const f=cart.find(c=>c.name===name && c.unit===unit);
-    if(f)f.qty+=qty; else cart.push({name,qty,unit});
+    if(f) f.qty+=qty; else cart.push({name,qty,unit});
     m.remove(); render();
   };
 }
 
+/* ===== TICKET ===== */
 function renderTicket(){
-  ticketList.innerHTML=cart.map((c,i)=>`
+  ticketList.innerHTML = cart.map((c,i)=>`
     <li>${c.name} - ${c.qty} ${c.unit}
       <button class="del" onclick="askDeleteTicket(${i})">✕</button>
-    </li>`).join('');
+    </li>
+  `).join('');
 }
 
+/* ===== ELIMINAR ===== */
 function askDeleteItem(i){
   deleteType='item'; deleteIndex=i;
   confirmText.textContent=`¿Eliminar ${items[i].name}?`;
@@ -148,19 +159,23 @@ function askDeleteItem(i){
 
 function askDeleteTicket(i){
   deleteType='ticket'; deleteIndex=i;
-  confirmText.textContent=`¿Eliminar ${cart[i].name} del ticket?`;
+  confirmText.textContent=`¿Eliminar ${cart[i].name}?`;
   confirmModal.style.display='flex';
 }
 
 function confirmDelete(){
-  if(deleteType==='item')items.splice(deleteIndex,1);
-  if(deleteType==='ticket')cart.splice(deleteIndex,1);
+  if(deleteType==='item') items.splice(deleteIndex,1);
+  if(deleteType==='ticket') cart.splice(deleteIndex,1);
   closeConfirm(); render();
 }
 
-function closeConfirm(){confirmModal.style.display='none'}
+function closeConfirm(){
+  confirmModal.style.display='none';
+}
 
-function resetTicket(){cart=[]; render()}
+function resetTicket(){
+  cart=[]; render();
+}
 
 /* ===== IMPRESIÓN ===== */
 function printTicket(){
@@ -173,8 +188,13 @@ function printTicket(){
         <span>${c.qty} ${c.unit}</span>
       </div>`;
   });
-  ticket-fecha.textContent=new Date().toLocaleString();
-  ticket-total.textContent=cart.length;
+
+  document.getElementById("ticket-fecha").textContent =
+    new Date().toLocaleString();
+
+  document.getElementById("ticket-total").textContent =
+    cart.length;
+
   window.print();
 }
 
@@ -195,27 +215,9 @@ function buildWhatsAppText(){
   return txt.trim();
 }
 
-function previewWhatsApp(){
-  const m=document.createElement('div');
-  m.className='modal'; m.style.display='flex';
-  m.innerHTML=`<div class="box">
-    <h3>Vista previa WhatsApp</h3>
-    <textarea style="width:100%;height:200px">${buildWhatsAppText()}</textarea>
-    <div>
-      <button id="cancel">Cancelar</button>
-      <button id="send">Enviar</button>
-    </div>
-  </div>`;
-  document.body.appendChild(m);
-
-  m.querySelector('#cancel').onclick=()=>m.remove();
-  m.querySelector('#send').onclick=()=>{
-    window.open('https://wa.me/?text='+encodeURIComponent(m.querySelector('textarea').value));
-    m.remove();
-  };
+function sendWhatsApp(){
+  window.open('https://wa.me/?text='+encodeURIComponent(buildWhatsAppText()));
 }
-
-function sendWhatsApp(){previewWhatsApp();}
 
 /* ===== DATOS INICIALES ===== */
 if(items.length===0){
