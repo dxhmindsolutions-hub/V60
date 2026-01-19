@@ -296,7 +296,10 @@ main{
     <div class="menu" onclick="toggleDrawer()">≡</div>
     <h1>Despensa</h1>
     <!-- BOTÓN MODO EDICIÓN -->
-    <div class="addMain" onclick="toggleEditMode()">✏️</div>
+    <div class="addMain" onclick="editMode ? showAddItem() : toggleEditMode()">
+  <span id="editIcon">✏️</span>
+</div>
+
   </div>
   <div class="search">
     <input id="search" placeholder="Buscar..." oninput="render()">
