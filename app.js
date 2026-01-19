@@ -19,6 +19,13 @@ let items=JSON.parse(localStorage.items||'[]');
 let cart=JSON.parse(localStorage.cart||'[]');
 let deleteIndex=null, deleteType=null;
 
+/* ===== MODO EDICIÓN ===== */
+function toggleEditMode(){
+  editMode=!editMode;
+  document.body.classList.toggle('edit-mode',editMode);
+  render();
+}
+
 function toggleDrawer(){drawer.classList.toggle('open')}
 
 function renderDrawer(){
@@ -31,17 +38,22 @@ function renderDrawer(){
 function render(){
   renderDrawer();
   const q=search.value.toLowerCase();
+
   list.innerHTML=items
     .filter(i=>(!q||i.name.toLowerCase().includes(q)) && i.cat===activeCat)
     .map((i,idx)=>`
       <div class="item">
         <span>${i.name}</span>
         <div>
-          <button class="add" onclick="showQtyModal('${i.name}')">+</button>
-          <button class="del" onclick="askDeleteItem(${idx})">✕</button>
+          ${
+            editMode
+              ? `<button class="del" onclick="askDeleteItem(${idx})">✕</button>`
+              : `<button class="add" onclick="showQtyModal('${i.name}')">+</button>`
+          }
         </div>
       </div>
     `).join('');
+
   renderTicket();
   localStorage.items=JSON.stringify(items);
   localStorage.cart=JSON.stringify(cart);
@@ -60,11 +72,12 @@ function showAddItem(){
       ${categories.map(c=>`<option>${c}</option>`).join('')}
     </select>
     <div style="display:flex;gap:8px;margin-top:10px">
-      <button id="cancel" style="flex:1">Cancelar</button>
-      <button id="save" style="flex:1">Guardar</button>
+      <button id="cancel">Cancelar</button>
+      <button id="save">Guardar</button>
     </div>
   </div>`;
   document.body.appendChild(m);
+
   m.querySelector('#cancel').onclick=()=>m.remove();
   m.querySelector('#close').onclick=()=>m.remove();
   m.querySelector('#save').onclick=()=>{
@@ -82,28 +95,31 @@ function showQtyModal(name){
   m.className='modal'; m.style.display='flex';
   m.innerHTML=`<div class="box">
     <h3>${name}</h3>
+
     <p>Cantidad</p>
     <div class="btns qty">
       ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button>${n}</button>`).join('')}
     </div>
+
     <p>Unidad</p>
     <div class="btns unit">
       <button class="active">UNIDAD</button>
       <button>KG</button>
       <button>CAJA</button>
     </div>
-   <div style="display:flex;gap:8px;margin-top:10px">
-  <button id="add">Añadir</button>
-  <button id="cancel">Cancelar</button>
-</div>
 
+    <div>
+      <button id="add">Añadir</button>
+      <button id="cancel">Cancelar</button>
+    </div>
   </div>`;
   document.body.appendChild(m);
 
   m.querySelectorAll('.qty button').forEach(b=>b.onclick=()=>{
     m.querySelectorAll('.qty button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); qty=Number(b.textContent);
+    b.classList.add('active'); qty=+b.textContent;
   });
+
   m.querySelectorAll('.unit button').forEach(b=>b.onclick=()=>{
     m.querySelectorAll('.unit button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active'); unit=b.textContent;
@@ -129,39 +145,36 @@ function askDeleteItem(i){
   confirmText.textContent=`¿Eliminar ${items[i].name}?`;
   confirmModal.style.display='flex';
 }
+
 function askDeleteTicket(i){
   deleteType='ticket'; deleteIndex=i;
   confirmText.textContent=`¿Eliminar ${cart[i].name} del ticket?`;
   confirmModal.style.display='flex';
 }
+
 function confirmDelete(){
   if(deleteType==='item')items.splice(deleteIndex,1);
   if(deleteType==='ticket')cart.splice(deleteIndex,1);
   closeConfirm(); render();
 }
+
 function closeConfirm(){confirmModal.style.display='none'}
 
 function resetTicket(){cart=[]; render()}
 
-/* ===== IMPRESIÓN TICKET 80MM ===== */
+/* ===== IMPRESIÓN ===== */
 function printTicket(){
   const cont=document.getElementById("ticket-items");
   cont.innerHTML="";
-
   cart.forEach(c=>{
     cont.innerHTML+=`
       <div class="ticket-line">
         <span>${c.name}</span>
         <span>${c.qty} ${c.unit}</span>
-      </div>
-    `;
+      </div>`;
   });
-
-  document.getElementById("ticket-fecha").textContent=
-    new Date().toLocaleString();
-
-  document.getElementById("ticket-total").textContent=cart.length;
-
+  ticket-fecha.textContent=new Date().toLocaleString();
+  ticket-total.textContent=cart.length;
   window.print();
 }
 
@@ -175,9 +188,7 @@ function buildWhatsAppText(){
     });
     if(lines.length){
       txt+=cat.toUpperCase()+"\n";
-      lines.forEach(l=>{
-        txt+=`- ${l.name}: ${l.qty} ${l.unit}\n`;
-      });
+      lines.forEach(l=>txt+=`- ${l.name}: ${l.qty} ${l.unit}\n`);
       txt+="\n";
     }
   });
@@ -185,13 +196,12 @@ function buildWhatsAppText(){
 }
 
 function previewWhatsApp(){
-  const text=buildWhatsAppText();
   const m=document.createElement('div');
   m.className='modal'; m.style.display='flex';
   m.innerHTML=`<div class="box">
     <h3>Vista previa WhatsApp</h3>
-    <textarea style="width:100%;height:200px">${text}</textarea>
-    <div style="display:flex;gap:8px;margin-top:10px">
+    <textarea style="width:100%;height:200px">${buildWhatsAppText()}</textarea>
+    <div>
       <button id="cancel">Cancelar</button>
       <button id="send">Enviar</button>
     </div>
@@ -200,13 +210,12 @@ function previewWhatsApp(){
 
   m.querySelector('#cancel').onclick=()=>m.remove();
   m.querySelector('#send').onclick=()=>{
-    const t=encodeURIComponent(m.querySelector('textarea').value);
-    window.open('https://wa.me/?text='+t);
+    window.open('https://wa.me/?text='+encodeURIComponent(m.querySelector('textarea').value));
     m.remove();
   };
 }
 
-function sendWhatsApp(){ previewWhatsApp(); }
+function sendWhatsApp(){previewWhatsApp();}
 
 /* ===== DATOS INICIALES ===== */
 if(items.length===0){
