@@ -1,3 +1,5 @@
+let editMode = false;
+
 const categories=[
   "Aguas y refrescos",
   "Cerveza, vinos y licores",
