@@ -33,8 +33,9 @@ header{
 }
 .addMain{
   margin-left:auto;
-  font-size:20px;
-  cursor:pointer
+  font-size:16px;
+  cursor:pointer;
+  font-weight:600
 }
 h1{
   margin:0;
@@ -75,6 +76,20 @@ h1{
   color:#fff
 }
 
+/* ===== BOTÓN AÑADIR ARTÍCULO ===== */
+#addItemBtn{
+  display:none;
+  margin:12px;
+  width:calc(100% - 24px);
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#43a047;
+  color:#fff;
+  font-weight:600;
+  font-size:16px
+}
+
 /* ===== LISTA ===== */
 main{
   padding:12px;
@@ -90,7 +105,7 @@ main{
   margin-bottom:8px
 }
 .item > div{
-  display:flex;
+  display:flex
 }
 .item button{
   width:36px;
@@ -101,7 +116,7 @@ main{
   font-weight:600;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:center
 }
 .add{
   background:#000;
@@ -110,10 +125,6 @@ main{
 .del{
   background:#ff3b30;
   color:#fff
-}
-.item button:active{
-  transform:scale(0.9);
-  opacity:.85
 }
 
 /* ===== TICKET ===== */
@@ -168,103 +179,28 @@ main{
 }
 .modal h3{
   margin:0 0 12px;
-  text-align:center;
-  font-size:18px
+  text-align:center
 }
-.modal p{
-  margin:14px 0 6px;
-  font-weight:600
-}
-
-/* ===== BOTONES CANTIDAD ===== */
-.btns.qty{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px
-}
-.btns.qty button{
-  padding:10px 0;
-  border:1px solid #000;
-  border-radius:12px;
-  background:#fff;
-  font-weight:600
-}
-
-/* ===== BOTONES UNIDAD ===== */
-.btns.unit{
-  display:flex;
-  gap:8px
-}
-.btns.unit button{
-  flex:1;
-  padding:10px 0;
-  border:1px solid #000;
-  border-radius:12px;
-  background:#fff;
-  font-weight:600
-}
-.btns button.active{
-  background:#000;
-  color:#fff
-}
-
-/* ===== BOTONES MODAL ===== */
-.modal .box > div:last-child{
+.modal .box > div{
   display:flex;
   gap:8px;
-  margin-top:16px
+  margin-top:12px
 }
-.modal #add,
-.modal #save,
-.modal #send{
+.modal button{
   flex:1;
   padding:12px;
   border-radius:12px;
   border:none;
-  background:#43a047;
-  color:#fff;
   font-weight:600
+}
+.modal #save,
+.modal #add{
+  background:#43a047;
+  color:#fff
 }
 .modal #cancel{
-  flex:1;
-  padding:12px;
-  border-radius:12px;
-  border:none;
   background:#ff3b30;
-  color:#fff;
-  font-weight:600
-}
-.modal button:active{
-  transform:scale(0.97)
-}
-
-/* ===== TICKET IMPRESIÓN ===== */
-#print-ticket{
-  display:none;
-  font-family:monospace
-}
-@media print{
-  body *{display:none !important}
-  #print-ticket,
-  #print-ticket *{display:block !important}
-  #print-ticket{
-    width:80mm;
-    margin:0;
-    padding:0;
-    font-size:20px
-  }
-  #print-ticket h2{
-    text-align:center;
-    font-size:20px
-  }
-  .ticket-line{
-    display:flex;
-    justify-content:space-between
-  }
-  .gracias{
-    text-align:center;
-    margin-top:20px
-  }
+  color:#fff
 }
 </style>
 </head>
@@ -277,17 +213,14 @@ main{
   <div class="top">
     <div class="menu" onclick="toggleDrawer()">≡</div>
     <h1>Despensa</h1>
-
-    <!-- ✏️ / ➕ -->
-    <div class="addMain" onclick="editMode ? showAddItem() : toggleEditMode()">
-      <span id="editIcon">✏️</span>
-    </div>
+    <div class="addMain" id="editBtn" onclick="toggleEditMode()">✏️ Editar</div>
   </div>
-
   <div class="search">
     <input id="search" placeholder="Buscar..." oninput="render()">
   </div>
 </header>
+
+<button id="addItemBtn" onclick="showAddItem()">➕ Añadir artículo</button>
 
 <main id="list"></main>
 
@@ -311,15 +244,7 @@ main{
   </div>
 </div>
 
-<div id="print-ticket">
-  <h2>[PEDIDO]</h2>
-  <p>Fecha: <span id="ticket-fecha"></span></p>
-  <hr>
-  <div id="ticket-items"></div>
-  <hr>
-  <p>Total productos: <span id="ticket-total"></span></p>
-  <p class="gracias">Revise la cesta antes de imprimir</p>
-</div>
+<div id="print-ticket"></div>
 
 <script src="app.js"></script>
 </body>
