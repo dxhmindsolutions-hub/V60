@@ -89,13 +89,9 @@ main{
   align-items:center;
   margin-bottom:8px
 }
-
-/* CONTENEDOR BOTONES */
 .item > div{
   display:flex;
 }
-
-/* BOTONES LISTA */
 .item button{
   width:36px;
   height:36px;
@@ -107,20 +103,14 @@ main{
   align-items:center;
   justify-content:center;
 }
-
-/* AÑADIR */
 .add{
   background:#000;
   color:#fff
 }
-
-/* ELIMINAR */
 .del{
   background:#ff3b30;
   color:#fff
 }
-
-/* EFECTO */
 .item button:active{
   transform:scale(0.9);
   opacity:.85
@@ -213,8 +203,6 @@ main{
   background:#fff;
   font-weight:600
 }
-
-/* ACTIVO */
 .btns button.active{
   background:#000;
   color:#fff
@@ -226,8 +214,6 @@ main{
   gap:8px;
   margin-top:16px
 }
-
-/* VERDE */
 .modal #add,
 .modal #save,
 .modal #send{
@@ -239,8 +225,6 @@ main{
   color:#fff;
   font-weight:600
 }
-
-/* ROJO */
 .modal #cancel{
   flex:1;
   padding:12px;
@@ -250,8 +234,6 @@ main{
   color:#fff;
   font-weight:600
 }
-
-/* EFECTO */
 .modal button:active{
   transform:scale(0.97)
 }
@@ -295,19 +277,15 @@ main{
   <div class="top">
     <div class="menu" onclick="toggleDrawer()">≡</div>
     <h1>Despensa</h1>
-    <!-- BOTÓN MODO EDICIÓN -->
-    <div class="addMain" onclick="editMode ? showAddItem() : toggleEditMode()">
-  <span id="editIcon">✏️</span>
-</div>
 
+    <!-- ✏️ / ➕ -->
+    <div class="addMain" onclick="editMode ? showAddItem() : toggleEditMode()">
+      <span id="editIcon">✏️</span>
+    </div>
   </div>
+
   <div class="search">
     <input id="search" placeholder="Buscar..." oninput="render()">
-    const icon = document.getElementById("editIcon");
-if(icon){
-  icon.textContent = editMode ? "➕" : "✏️";
-}
-
   </div>
 </header>
 
