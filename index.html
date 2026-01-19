@@ -303,6 +303,11 @@ main{
   </div>
   <div class="search">
     <input id="search" placeholder="Buscar..." oninput="render()">
+    const icon = document.getElementById("editIcon");
+if(icon){
+  icon.textContent = editMode ? "➕" : "✏️";
+}
+
   </div>
 </header>
 
