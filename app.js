@@ -5,12 +5,14 @@ const list          = document.getElementById("list");
 const ticketList    = document.getElementById("ticketList");
 const confirmModal  = document.getElementById("confirmModal");
 const confirmText   = document.getElementById("confirmText");
+const editIcon      = document.getElementById("editIcon");
 
 /* ===== MODO EDICIÓN ===== */
 let editMode = false;
 
 function toggleEditMode(){
   editMode = !editMode;
+  editIcon.textContent = editMode ? "➕" : "✏️";
   render();
 }
 
@@ -261,5 +263,5 @@ if(items.length === 0){
   ];
 }
 
+/* ===== ARRANQUE ===== */
 render();
-
